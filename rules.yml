@@ -1,0 +1,12 @@
+groups:
+- name: prometheus
+  rules:
+  - alert: HighFailedRequest
+    expr: (100 * sum(increase(request{status="failed"}[1m])) by  (region,service,action) / (sum(increase(request{status="failed"}[1m])) by  (region,service,action) + sum(increase(request{status="successed"}[1m])) by  (region,service,action))) > 2
+    labels:
+      severity: page
+      service: "{{ $labels.service }}"
+      region: "{{ $labels.region }}"
+      action: "{{ $labels.action }}"
+    annotations:
+      summary: "High error rate for Service {{ $labels.service }} in  Region {{ $labels.region }}"

@@ -1,0 +1,23 @@
+global:
+  resolve_timeout: 5m
+route:
+  repeat_interval: 20s
+  receiver: 'cloud-channel'
+
+  routes:
+    - receiver: "unmanaged"
+      matchers:
+          - service!~"cloud"
+      continue: true
+    - receiver: "cloud-channel"
+      matchers:
+          - service=~"cloud"
+      continue: true
+
+receivers:
+- name: 'cloud-channel'
+  discord_configs:
+  - webhook_url: 'https://discord.com/api/webhooks/xxxxxxxxxx'
+- name: 'unmanaged'
+  discord_configs:
+  - webhook_url: 'https://discord.com/api/webhooks/yyyyyyyyyy'
